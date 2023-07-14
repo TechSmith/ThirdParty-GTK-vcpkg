@@ -1,0 +1,116 @@
+trigger: none
+jobs:
+- job: CreateMacPangoLibsViaVcpkg
+  condition: eq(true, false) # disable job for now
+  
+  pool:
+    vmImage: 'macOS-12'
+  steps:
+  - bash: |
+      git clone -b glibCrossCompileFix https://github.com/TechSmith/vcpkg
+      cd vcpkg
+      ./bootstrap-vcpkg.sh 
+    displayName: Setup vcpkg
+    
+  - bash: |
+      ./vcpkg install pango:x64-osx-dynamic-release --overlay-triplets=$(Build.SourcesDirectory)/triplets
+      ./vcpkg install pango:arm64-osx-dynamic-release --overlay-triplets=$(Build.SourcesDirectory)/triplets
+    workingDirectory: vcpkg
+    displayName: Run vcpkg install
+
+  - bash: |
+      ./vcpkg list > ../versions.txt
+      ./vcpkg list --x-json > ../versions.json
+    workingDirectory: vcpkg
+    displayName: Save library versions to a text and json file
+
+  - bash: |
+      ls -l vcpkg/installed/x64-osx-dynamic-release/lib
+      ls -l vcpkg/installed/arm64-osx-dynamic-release/lib
+    displayName: DEBUGGING
+
+  - task: Bash@3
+    inputs:
+      filePath: makeUniversalBinary.sh
+    displayName: Make Universal Binaries
+
+  - bash: |
+      cp versions.txt universal
+      cp versions.json universal
+      cp codeSignLibs.sh universal
+    displayName: Copy other packaging files into universal
+
+  - bash: |
+      ls -l universal
+      ls -l universal/include
+      ls -l universal/lib
+    displayName: DEBUGGING UNIVERSAL
+
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: universal 
+      archiveType: 'tar'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/MacPango.tar.gz'
+      verbose: true # boolean. Force verbose output. Default: false.
+
+  # Publish Artifacts Libs
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Libs
+    inputs:
+      pathToPublish: $(Build.ArtifactStagingDirectory)/MacPango.tar.gz
+      artifactName: MacPango  
+
+
+###########################
+- job: CreateWinPangoLibsViaVcpkg
+  pool:
+    vmImage: 'windows-2022'
+  steps:
+  - bash: |
+      git clone -b glibCrossCompileFix https://github.com/TechSmith/vcpkg
+      cd vcpkg
+      ./bootstrap-vcpkg.sh 
+    displayName: Setup vcpkg
+    
+  - bash: |
+      ./vcpkg.exe install pango:x64-windows-release --overlay-triplets=$(Build.SourcesDirectory)/triplets
+    workingDirectory: vcpkg
+    displayName: Run vcpkg install
+
+  - bash: |
+      ./vcpkg list > ../versions.txt
+      ./vcpkg list --x-json > ../versions.json
+    workingDirectory: vcpkg
+    displayName: Save library versions to a text and json file
+
+  - bash: |
+      ls -l vcpkg/installed/x64-windows-release/include
+      ls -l vcpkg/installed/x64-windows-release/lib
+    displayName: DEBUGGING
+
+  - bash: |
+      ls -l
+      rm -rf tools
+      rm -rf share
+      rm -rf debug # shouldn't need this
+    workingDirectory: vcpkg/installed/x64-windows-release
+    displayName: Remove stuff we don't want
+
+  - bash: |
+      cp versions.txt vcpkg/installed/x64-windows-release
+      cp versions.json vcpkg/installed/x64-windows-release
+    displayName: Copy versions.txt/json to archive stage
+
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: vcpkg/installed/x64-windows-release
+      archiveType: 'tar'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/WinPango.tar.gz'
+      verbose: true # boolean. Force verbose output. Default: false.
+
+  # Publish Artifacts Libs
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Libs
+    inputs:
+      pathToPublish: $(Build.ArtifactStagingDirectory)/WinPango.tar.gz
+      artifactName: WinPango  
