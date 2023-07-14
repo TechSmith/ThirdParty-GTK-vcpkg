@@ -1,7 +1,7 @@
 trigger: none
 jobs:
 - job: CreateMacPangoLibsViaVcpkg
-  condition: eq(true, false) # disable job for now
+  #condition: eq(true, false) # disable job for now
   
   pool:
     vmImage: 'macOS-12'
