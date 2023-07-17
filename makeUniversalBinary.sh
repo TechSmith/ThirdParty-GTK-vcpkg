@@ -15,6 +15,9 @@ mkdir -p ${UNIVERSAL_LIB}
 # So let's just assume they are the same for now
 cp -R ${ARM64_PATH}/include ${UNIVERSAL_PATH}/include
 
+# Also copy over etc folder
+cp -R ${ARM64_PATH}/etc ${UNIVERSAL_PATH}/etc
+
 # glib is weird. It has headers in the lib folder
 #mkdir -p ${UNIVERSAL_PATH}/lib/glib-2.0/include
 #cp ${ARM64_PATH}/lib/glib-2.0/include/glibconfig.h ${UNIVERSAL_PATH}/lib/glib-2.0/include/glibconfig.h
@@ -40,5 +43,3 @@ for dylibPath in ${ARM64_LIB}/*.dylib; do
    fi
 done
 
-## Also copy over etc folder
-#cp -R ${ARM64_PATH}/etc ${UNIVERSAL_PATH}/etc
