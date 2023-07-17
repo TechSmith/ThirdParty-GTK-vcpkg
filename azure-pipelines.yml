@@ -7,7 +7,7 @@ jobs:
     vmImage: 'macOS-12'
   steps:
   - bash: |
-      git clone -b glibCrossCompileFix https://github.com/TechSmith/vcpkg
+      git clone https://github.com/TechSmith/vcpkg # clone the TSC fork because we have some customizations
       cd vcpkg
       ./bootstrap-vcpkg.sh 
     displayName: Setup vcpkg
@@ -67,7 +67,7 @@ jobs:
     vmImage: 'windows-2022'
   steps:
   - bash: |
-      git clone -b glibCrossCompileFix https://github.com/TechSmith/vcpkg
+      git clone https://github.com/TechSmith/vcpkg # clone the TSC fork because we have some customizations
       cd vcpkg
       ./bootstrap-vcpkg.sh 
     displayName: Setup vcpkg
