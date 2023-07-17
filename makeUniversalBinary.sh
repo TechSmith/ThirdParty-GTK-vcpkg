@@ -19,8 +19,8 @@ cp -R ${ARM64_PATH}/include ${UNIVERSAL_PATH}/include
 cp -R ${ARM64_PATH}/etc ${UNIVERSAL_PATH}/etc
 
 # glib is weird. It has headers in the lib folder
-#mkdir -p ${UNIVERSAL_PATH}/lib/glib-2.0/include
-#cp ${ARM64_PATH}/lib/glib-2.0/include/glibconfig.h ${UNIVERSAL_PATH}/lib/glib-2.0/include/glibconfig.h
+mkdir -p ${UNIVERSAL_PATH}/lib/glib-2.0/include
+cp ${ARM64_PATH}/lib/glib-2.0/include/glibconfig.h ${UNIVERSAL_PATH}/lib/glib-2.0/include/glibconfig.h
 
 # Make install paths relative for both arm64 and x86_64
 #
