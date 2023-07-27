@@ -11,12 +11,16 @@ jobs:
       cd vcpkg
       ./bootstrap-vcpkg.sh 
     displayName: Setup vcpkg
-    
+
   - bash: |
-      ./vcpkg install pango:x64-osx-dynamic-release --overlay-triplets=$(Build.SourcesDirectory)/triplets
-      ./vcpkg install pango:arm64-osx-dynamic-release --overlay-triplets=$(Build.SourcesDirectory)/triplets
+      ./vcpkg install pango:x64-osx-dynamic-release
     workingDirectory: vcpkg
-    displayName: Run vcpkg install
+    displayName: Run vcpkg install (x64-osx-dynamic-release)
+
+  - bash: |
+      ./vcpkg install pango:arm64-osx-dynamic-release
+    workingDirectory: vcpkg
+    displayName: Run vcpkg install (arm64-osx-dynamic-release)
 
   - bash: |
       ./vcpkg list > ../versions.txt
@@ -63,6 +67,7 @@ jobs:
 
 ###########################
 - job: CreateWinPangoLibsViaVcpkg
+  #condition: eq(true, false) # disable job for now
   pool:
     vmImage: 'windows-2022'
   steps:
@@ -73,8 +78,8 @@ jobs:
     displayName: Setup vcpkg
     
   - bash: |
-      ./vcpkg.exe install pango:x64-windows-release --overlay-triplets=$(Build.SourcesDirectory)/triplets
-    workingDirectory: vcpkg
+      ./vcpkg/vcpkg.exe install pango:x64-windows-release
+    workingDirectory: $(Build.SourcesDirectory)
     displayName: Run vcpkg install
 
   - bash: |
@@ -114,3 +119,4 @@ jobs:
     inputs:
       pathToPublish: $(Build.ArtifactStagingDirectory)/WinPango.tar.gz
       artifactName: WinPango  
+
