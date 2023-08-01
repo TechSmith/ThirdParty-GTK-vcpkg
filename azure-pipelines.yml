@@ -89,8 +89,8 @@ jobs:
     displayName: Save library versions to a text and json file
 
   - bash: |
-      ls -l vcpkg/installed/x64-windows-release/include
-      ls -l vcpkg/installed/x64-windows-release/lib
+      ls -l vcpkg/installed/x64-windows-dynamic-release/include
+      ls -l vcpkg/installed/x64-windows-dynamic-release/lib
     displayName: DEBUGGING
 
   - bash: |
@@ -98,17 +98,17 @@ jobs:
       rm -rf tools
       rm -rf share
       rm -rf debug # shouldn't need this
-    workingDirectory: vcpkg/installed/x64-windows-release
+    workingDirectory: vcpkg/installed/x64-windows-dynamic-release
     displayName: Remove stuff we don't want
 
   - bash: |
-      cp versions.txt vcpkg/installed/x64-windows-release
-      cp versions.json vcpkg/installed/x64-windows-release
+      cp versions.txt vcpkg/installed/x64-windows-dynamic-release
+      cp versions.json vcpkg/installed/x64-windows-dynamic-release
     displayName: Copy versions.txt/json to archive stage
 
   - task: ArchiveFiles@2
     inputs:
-      rootFolderOrFile: vcpkg/installed/x64-windows-release
+      rootFolderOrFile: vcpkg/installed/x64-windows-dynamic-release
       archiveType: 'tar'
       archiveFile: '$(Build.ArtifactStagingDirectory)/WinPango.tar.gz'
       verbose: true # boolean. Force verbose output. Default: false.
