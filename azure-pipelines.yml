@@ -78,7 +78,7 @@ jobs:
     displayName: Setup vcpkg
     
   - bash: |
-      ./vcpkg/vcpkg.exe install pango:x64-windows-release
+      ./vcpkg/vcpkg.exe install pango:x64-windows-dynamic-release
     workingDirectory: $(Build.SourcesDirectory)
     displayName: Run vcpkg install
 
