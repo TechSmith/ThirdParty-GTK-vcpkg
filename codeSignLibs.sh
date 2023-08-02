@@ -1,7 +1,7 @@
 if [ $# -lt 1 ]; then
    echo "Usage: $0 <code signing identity>"
 
-   echo "\n\nYour identies are:"
+   echo "\n\nYour identities are:"
    security find-identity -v -p codesigning
    exit 1
 fi
