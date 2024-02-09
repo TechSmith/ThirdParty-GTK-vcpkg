@@ -64,10 +64,26 @@ jobs:
       pathToPublish: $(Build.ArtifactStagingDirectory)/MacPango.tar.gz
       artifactName: MacPango  
 
+  # Publish fontconfig logs
+  - task: PublishBuildArtifacts@1
+    displayName: Publish fontconfig logs 1
+    condition: always()
+    inputs:
+      pathToPublish: vcpkg/buildtrees/fontconfig/config-x64-osx-dynamic-release-rel-meson-log.txt.log
+      artifactName: config-x64-osx-dynamic-release-rel-meson-log.txt.log
+
+  # Publish fontconfig logs 2
+  - task: PublishBuildArtifacts@1
+    displayName: Publish fontconfig logs 2
+    condition: always()
+    inputs:
+      pathToPublish: vcpkg/buildtrees/fontconfig/config-x64-osx-dynamic-release-rel-out.log
+      artifactName: config-x64-osx-dynamic-release-rel-out.log
+
 
 ###########################
 - job: CreateWinPangoLibsViaVcpkg
-  #condition: eq(true, false) # disable job for now
+  condition: eq(true, false) # disable job for now
   pool:
     vmImage: 'windows-2022'
   steps:
